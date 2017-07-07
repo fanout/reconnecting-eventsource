@@ -86,7 +86,11 @@ ReconnectingEventSource.prototype._onerror = function (event) {
 			// reconnect with new object
 			this._eventSource.close();
 			this._eventSource = null;
-			this._timer = setTimeout(this._start, this.retry_time);
+
+			var self = this;
+			this._timer = setTimeout(function () {
+				self._start();
+			}, this.retry_time);
 		}
 	}
 };
