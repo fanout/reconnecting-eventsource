@@ -2,8 +2,6 @@
 
 This is a small wrapper library around the [JavaScript EventSource API](https://www.w3.org/TR/eventsource/) to ensure it maintains a connection to the server. Normally, `EventSource` will reconnect on its own, however there are some cases where it may not. This library ensures a reconnect always happens.
 
-## Usage
-
 To use it, just replace:
 
 ```js
