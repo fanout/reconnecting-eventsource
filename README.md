@@ -14,10 +14,6 @@ with:
 var es = new ReconnectingEventSource(url);
 ```
 
-## Dependencies
-
-You need to use a [polyfill for EventSource](https://github.com/Yaffle/EventSource) if you are targeting a browser that doesn't support it, such as IE or Edge.
-
 ## Adding to your project
 
 ```
@@ -34,6 +30,8 @@ For node/browserify/webpack/etc, use
 ```
 import ReconnectingEventSource from "reconnecting-eventsource";
 ```
+
+Note: This project assumes you have a working `EventSource` available. If you are targeting a browser that doesn't support it, such as IE or Edge, you'll need to use a [polyfill for EventSource](https://github.com/Yaffle/EventSource).
 
 ## Building from source
 
