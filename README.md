@@ -4,13 +4,23 @@ This is a small wrapper library around the []JavaScript EventSource API](https:/
 ensure it maintains a connection to the server. Normally, `EventSource` will reconnect on its own,
 however there are some cases where it may not. This library ensures a reconnect always happens.
 
+## Usage
+
+To use it, just replace:
+
+```js
+var es = new EventSource(url);
+```
+
+with:
+
+```js
+var es = new ReconnectingEventSource(url);
+```
+
 ## Dependencies
 
-You need to use a [polyfill for EventSource](https://github.com/Yaffle/EventSource) if you are targeting a browser that doesn't support it,
-such as IE or Edge.
-
-Additionally, if you need to support a browser that does not natively provide support for JSON (such as IE7 or lower),
-then you should use the [json2.js polyfill](https://github.com/douglascrockford/JSON-js).
+You need to use a [polyfill for EventSource](https://github.com/Yaffle/EventSource) if you are targeting a browser that doesn't support it, such as IE or Edge.
 
 ## Adding to your project
 
@@ -29,24 +39,9 @@ For node/browserify/webpack/etc, use
 import ReconnectingEventSource from "reconnecting-eventsource";
 ```
 
-## Usage
-
-To use it, just replace:
-
-```js
-var es = new EventSource(url);
-```
-
-with:
-
-```js
-var es = new ReconnectingEventSource(url);
-```
-
 ## Building from source
 
-If you wish to build this project, check out this repository and modify the source files in `src/`.
-Then, run the following command:
+If you wish to build this project, check out this repository and modify the source files in `src/`. Then, run the following command:
 
 ```
 npm run build
