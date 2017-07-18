@@ -33,11 +33,14 @@ function buildOutput() {
 
     let outputFilename;
     switch(BUILD_TARGET) {
+        case "umd":
+            outputFilename = globalName + ".js";
+            break;
         case "umd-min":
             outputFilename = globalName + ".min.js";
             break;
         default:
-            outputFilename = globalName + ".js";
+            outputFilename = "index.js";
     }
 
     const output = {

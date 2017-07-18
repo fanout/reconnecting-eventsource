@@ -43,6 +43,17 @@ with:
 var es = new ReconnectingEventSource(url);
 ```
 
+## Building from source
+
+If you wish to build this project, check out this repository and modify the source files in `src/`.
+Then, run the following command:
+
+```
+npm run build
+```
+
+The resulting files are in `lib/` for the node build and `dist/` for the browser build.
+
 ## When does the normal `EventSource` not reconnect?
 
 Typically, the normal `EventSource` only reconnects if it is unable to reach the server at all.
