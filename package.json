@@ -1,0 +1,51 @@
+{
+  "name": "reconnecting-eventsource",
+  "version": "1.0.0",
+  "description": "wrapper library around the JavaScript EventSource API to ensure it maintains a connection to the server.",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "rimraf lib dist",
+    "build": "npm run build:commonjs && npm run build:umd && npm run build:umd:min",
+    "build:commonjs": "cross-env BUILD_TARGET=commonjs webpack",
+    "build:umd": "cross-env BUILD_TARGET=umd webpack",
+    "build:umd:min": "cross-env BUILD_TARGET=umd-min webpack",
+    "check:src": "npm run lint",
+    "lint": "eslint src",
+    "prepublishOnly": "npm run clean && npm run check:src && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fanout/reconnecting-eventsource.git"
+  },
+  "author": "Fanout, Inc. <info@fanout.io>",
+  "license": "MIT",
+  "contributors": [
+    {
+      "name": "Katsuyuki Ohmuro",
+      "email": "harmony7@pex2.jp"
+    }
+  ],
+  "keywords": [
+    "fanout",
+    "eventsource",
+    "sse",
+    "realtime",
+    "push"
+  ],
+  "bugs": {
+    "url": "https://github.com/fanout/reconnecting-eventsource/issues"
+  },
+  "homepage": "https://github.com/fanout/reconnecting-eventsource#readme",
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
+    "cross-env": "^5.0.1",
+    "eslint": "^4.2.0",
+    "rimraf": "^2.6.1",
+    "webpack": "^3.3.0"
+  }
+}
