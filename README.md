@@ -16,18 +16,21 @@ var es = new ReconnectingEventSource(url);
 
 ## Adding to your project
 
-```
+```sh
 npm install reconnecting-eventsource
 ```
 
-In a browser environment, bring this in using
-```
+In a browser environment, bring this in using:
+
+```html
 <script src="/node_modules/reconnecting-eventsource/dist/ReconnectingEventSource[.min].js"></script>
 ```
-(You are free to copy this file out of node_modules if you wish)
 
-For node/browserify/webpack/etc, use
-```
+(You are free to copy this file out of `node_modules` if you wish)
+
+For node/browserify/webpack/etc, use:
+
+```js
 import ReconnectingEventSource from "reconnecting-eventsource";
 ```
 
@@ -37,7 +40,7 @@ Note: This project assumes you have a working `EventSource` available. If you ar
 
 If you wish to build this project, check out this repository and modify the source files in `src/`. Then, run the following command:
 
-```
+```sh
 npm run build
 ```
 
