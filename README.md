@@ -36,6 +36,23 @@ import ReconnectingEventSource from "reconnecting-eventsource";
 
 Note: This project assumes you have a working `EventSource` available. If you are targeting a browser that doesn't support it, such as IE or Edge, you'll need to use a [polyfill for EventSource](https://github.com/Yaffle/EventSource).
 
+## Configuration
+
+Like the [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource/EventSource#Syntax), the constructor takes an optional configuration object: `new ReconnectingEventSource(url configuration)`. The configuration object is passed through to the underlying `EventSource` and can optionally include the following configuration:
+
+```
+{
+    // indicating if CORS should be set to include credentials, default `false`
+    withCredentials: false,
+
+    // the maximum time to wait before attempting to reconnect in ms, default `3000`
+    // note: wait time is randomised to prevent all clients from attempting to reconnect simulataneously
+    max_retry_time: 3000,
+}
+
+```
+
+
 ## Building from source
 
 If you wish to build this project, check out this repository and modify the source files in `src/`. Then, run the following command:
