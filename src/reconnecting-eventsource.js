@@ -30,7 +30,7 @@ export default class ReconnectingEventSource {
 
         this.url = url;
         this.readyState = 0;
-        this.retry_time = 3000;
+        this.max_retry_time = configuration.max_retry_time || 3000;
 
         this._configuration = configuration != null ? Object.assign({}, configuration) : null;
 
@@ -86,7 +86,9 @@ export default class ReconnectingEventSource {
                 this._eventSource.close();
                 this._eventSource = null;
 
-                this._timer = setTimeout(() => { this._start(); }, this.retry_time);
+                // reconnect after random timeout < max_retry_time
+                const timeout = Math.round(this.max_retry_time * Math.random());
+                this._timer = setTimeout(this._start, timeout);
             }
         }
     }
