@@ -46,7 +46,7 @@ Like the [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventS
     withCredentials: false,
 
     // the maximum time to wait before attempting to reconnect in ms, default `3000`
-    // note: wait time is randomised to prevent all clients from attempting to reconnect simulataneously
+    // note: wait time is randomised to prevent all clients from attempting to reconnect simultaneously
     max_retry_time: 3000,
 }
 
