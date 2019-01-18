@@ -11,7 +11,8 @@
     "build:umd:min": "cross-env BUILD_TARGET=umd-min webpack",
     "check:src": "npm run lint",
     "lint": "eslint src",
-    "prepublishOnly": "npm run clean && npm run check:src && npm run build"
+    "prepublishOnly": "npm run clean && npm run check:src && npm run build",
+    "test": "node test"
   },
   "repository": {
     "type": "git",
@@ -45,7 +46,10 @@
     "babel-preset-env": "^1.6.0",
     "cross-env": "^5.0.1",
     "eslint": "^4.2.0",
+    "eventsource": "^1.0.7",
     "rimraf": "^2.6.1",
+    "sse": "0.0.8",
+    "stoppable": "^1.1.0",
     "webpack": "^3.3.0"
   }
 }
