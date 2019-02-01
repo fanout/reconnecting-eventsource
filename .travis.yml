@@ -12,6 +12,4 @@ jobs:
         - pwd
         - ls -alh
         - ls -alh lib
-    - stage: test
-      script:
-        - (cd etc/browser-demo && make)
+
