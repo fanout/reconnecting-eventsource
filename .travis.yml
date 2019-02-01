@@ -12,9 +12,10 @@ before_install:
 
 jobs:
   include:
+    - stage: build
+      script:
+        - npm run build
     - stage: test
       script:
-        - pwd
-        - ls -alh
-        - ls -alh lib
+        - npm test
 
