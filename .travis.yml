@@ -5,3 +5,13 @@ node_js:
   - "8"
   - "7"
 
+jobs:
+  include:
+    - stage: test
+      script:
+        - pwd
+        - ls -alh
+        - ls -alh lib
+    - stage: test
+      script:
+        - (cd etc/browser-demo && make)
