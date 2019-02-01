@@ -5,6 +5,11 @@ node_js:
   - "8"
   - "7"
 
+before_install:
+- pwd
+- ls -alh
+- touch .npmignore
+
 jobs:
   include:
     - stage: test
