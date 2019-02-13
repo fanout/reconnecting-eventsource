@@ -88,7 +88,7 @@ export default class ReconnectingEventSource {
 
                 // reconnect after random timeout < max_retry_time
                 const timeout = Math.round(this.max_retry_time * Math.random());
-                this._timer = setTimeout(this._start, timeout);
+                this._timer = setTimeout(() => this._start(), timeout);
             }
         }
     }
