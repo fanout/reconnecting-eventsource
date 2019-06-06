@@ -38,9 +38,9 @@ Note: This project assumes you have a working `EventSource` available. If you ar
 
 ## Configuration
 
-Like the [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource/EventSource#Syntax), the constructor takes an optional configuration object: `new ReconnectingEventSource(url configuration)`. The configuration object is passed through to the underlying `EventSource` and can optionally include the following configuration:
+Like the [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource/EventSource#Syntax), the constructor takes an optional configuration object: `new ReconnectingEventSource(url, configuration)`. The configuration object is passed through to the underlying `EventSource` and can optionally include the following configuration:
 
-```
+```json5
 {
     // indicating if CORS should be set to include credentials, default `false`
     withCredentials: false,
