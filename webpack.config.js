@@ -54,6 +54,7 @@ function buildOutput() {
             });
             break;
         case "umd":
+        case "umd-min":
             Object.assign(output, {
                 libraryTarget: 'var',
                 library: globalName
