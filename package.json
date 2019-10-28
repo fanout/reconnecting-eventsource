@@ -12,7 +12,7 @@
     "check:src": "npm run lint",
     "lint": "eslint src",
     "prepublishOnly": "npm run clean && npm run check:src && npm run build",
-    "test": "node test"
+    "test": "npm run build && node test"
   },
   "repository": {
     "type": "git",
