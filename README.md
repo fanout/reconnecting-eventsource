@@ -63,6 +63,14 @@ npm run build
 
 The resulting files are in `lib/` for the node build and `dist/` for the browser build.
 
+## To run the unit tests
+
+Make sure you first run the build task as explained above, then run:
+
+```sh
+npm test
+```
+
 ## When does the normal `EventSource` not reconnect?
 
 Typically, the normal `EventSource` only reconnects if it is unable to reach the server at all. However, if the server is reached and it responds with an error (e.g. 500 status), then `EventSource` will stop reconnecting.
