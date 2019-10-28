@@ -30,9 +30,9 @@ export default class ReconnectingEventSource {
 
         this.url = url;
         this.readyState = 0;
-        this._configuration = configuration != null ? Object.assign({}, configuration) : null;
+        this.max_retry_time = configuration && configuration.max_retry_time || 3000;
 
-        this.max_retry_time = this._configuration.max_retry_time || 3000;
+        this._configuration = configuration != null ? Object.assign({}, configuration) : null;
 
         if (this._configuration != null && this._configuration.lastEventId) {
             this._lastEventId = this._configuration.lastEventId;
