@@ -67,6 +67,7 @@ export default class ReconnectingEventSource {
 
         this._eventSource.onopen = event => { this._onopen(event); };
         this._eventSource.onerror = event => { this._onerror(event); };
+        this._eventSource.onmessage = event => { this.onmessage(event); };
 
         // apply listen types
         for (const type of Object.keys(this._listeners)) {
