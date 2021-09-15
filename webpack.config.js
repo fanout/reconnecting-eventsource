@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const globalName = "ReconnectingEventSource";
 
@@ -93,26 +92,11 @@ function addBabelRule(rules) {
     return [...rules, babelRule];
 }
 
-function addMinifyPlugin(minimizer) {
-    if (BUILD_TARGET === "umd-min") {
-        const minifyPlugin = new UglifyJsPlugin({
-            uglifyOptions: {
-                compress: {}
-            }
-        });
-        return [...minimizer, minifyPlugin];
-    }
-    return minimizer;
-}
-
 const entry = buildEntry();
 const output = buildOutput();
 
 let rules = [];
 rules = addBabelRule(rules);
-
-let minimizer = [];
-minimizer = addMinifyPlugin(minimizer);
 
 const config = {
     mode: 'production',
@@ -122,9 +106,6 @@ const config = {
     module: {
         rules
     },
-    optimization: {
-        minimizer
-    }
 };
 
 module.exports = config;
