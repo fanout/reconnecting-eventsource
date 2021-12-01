@@ -22,8 +22,9 @@
 
 export default class ReconnectingEventSource {
 
-    constructor(url, configuration) {
+    constructor(url, configuration, eventSourceClass) {
         this._configuration = configuration != null ? Object.assign({}, configuration) : null;
+        this._eventSourceClass = eventSourceClass != null ? eventSourceClass : EventSource;
 
         this._eventSource = null;
         this._lastEventId = null;
@@ -63,7 +64,7 @@ export default class ReconnectingEventSource {
             url += 'lastEventId=' + encodeURIComponent(this._lastEventId);
         }
 
-        this._eventSource = new EventSource(url, this._configuration);
+        this._eventSource = new this._eventSourceClass(url, this._configuration);
 
         this._eventSource.onopen = event => { this._onopen(event); };
         this._eventSource.onerror = event => { this._onerror(event); };
