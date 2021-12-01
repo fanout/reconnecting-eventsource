@@ -49,9 +49,13 @@ Like the [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventS
     // note: wait time is randomised to prevent all clients from attempting to reconnect simultaneously
     max_retry_time: 3000,
 }
-
 ```
 
+Unlike the [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource/EventSource#Syntax), the constructor can take a third (and optional) parameter to specify a custom class to replace the original [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource/EventSource#Syntax) class: `new ReconnectingEventSource(url, configuration, CustomEventSource)`. This allows librairies like [EventSource/eventsource](https://github.com/EventSource/eventsource) to be used in conjunction with this library. Internally, the custom EventSource class will be instancied this way:
+
+```json5
+new CustomEventSource(url, configuration);
+```
 
 ## Building from source
 
