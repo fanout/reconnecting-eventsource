@@ -40,7 +40,7 @@ Note: This project assumes you have a working `EventSource` available. If you ar
 
 Like the [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource/EventSource#Syntax), the constructor takes an optional configuration object: `new ReconnectingEventSource(url, configuration)`. The configuration object is passed through to the underlying `EventSource` and can optionally include the following configuration:
 
-```json5
+```
 {
     // indicating if CORS should be set to include credentials, default `false`
     withCredentials: false,
@@ -48,10 +48,15 @@ Like the [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventS
     // the maximum time to wait before attempting to reconnect in ms, default `3000`
     // note: wait time is randomised to prevent all clients from attempting to reconnect simultaneously
     max_retry_time: 3000,
+  
+    // a custom class to replace the original [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource/EventSource#Syntax) class.
+    eventSourceClass: window.EventSource,
 }
-
 ```
 
+The `eventSourceClass` configuration option allows you to use any replacement class that is compatible with the standard
+EventSource, such as [EventSource/eventsource](https://github.com/EventSource/eventsource), as the underlying EventSource
+for the constructed instance.
 
 ## Building from source
 
