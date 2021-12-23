@@ -22,9 +22,8 @@
 
 export default class ReconnectingEventSource {
 
-    constructor(url, configuration, eventSourceClass) {
+    constructor(url, configuration) {
         this._configuration = configuration != null ? Object.assign({}, configuration) : null;
-        this._eventSourceClass = eventSourceClass != null ? eventSourceClass : EventSource;
 
         this._eventSource = null;
         this._lastEventId = null;
@@ -34,6 +33,7 @@ export default class ReconnectingEventSource {
         this.url = url;
         this.readyState = 0;
         this.max_retry_time = 3000;
+        this.eventSourceClass = EventSource;
 
         if (this._configuration != null) {
             if (this._configuration.lastEventId) {
@@ -44,6 +44,11 @@ export default class ReconnectingEventSource {
             if (this._configuration.max_retry_time) {
                 this.max_retry_time = this._configuration.max_retry_time;
                 delete this._configuration['max_retry_time'];
+            }
+
+            if (this._configuration.eventSourceClass) {
+                this.eventSourceClass = this._configuration.eventSourceClass;
+                delete this._configuration['eventSourceClass'];
             }
         }
 
@@ -64,7 +69,7 @@ export default class ReconnectingEventSource {
             url += 'lastEventId=' + encodeURIComponent(this._lastEventId);
         }
 
-        this._eventSource = new this._eventSourceClass(url, this._configuration);
+        this._eventSource = new this.eventSourceClass(url, this._configuration);
 
         this._eventSource.onopen = event => { this._onopen(event); };
         this._eventSource.onerror = event => { this._onerror(event); };
