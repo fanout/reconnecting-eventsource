@@ -2,6 +2,7 @@ export interface ReconnectableEventSourceInit extends EventSourceInit {
 	// the maximum time to wait before attempting to reconnect in ms, default `3000`
 	// note: wait time is randomised to prevent all clients from attempting to reconnect simultaneously
 	max_retry_time?: number;
+	eventSourceClass?: any;
 }
 
 export default class ReconnectingEventSource extends EventSource {
