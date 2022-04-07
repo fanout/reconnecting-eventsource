@@ -33,7 +33,7 @@ export default class ReconnectingEventSource {
         this.url = url;
         this.readyState = 0;
         this.max_retry_time = 3000;
-        this.eventSourceClass = EventSource;
+        this.eventSourceClass = globalThis.EventSource;
 
         if (this._configuration != null) {
             if (this._configuration.lastEventId) {
