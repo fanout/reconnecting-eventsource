@@ -7,7 +7,7 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "eventsource": "^1.0.7",
+    "eventsource": "^2.0.2",
     "reconnecting-eventsource": "file:../../"
   },
   "author": "",
