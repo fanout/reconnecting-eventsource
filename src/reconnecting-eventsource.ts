@@ -1,6 +1,6 @@
 // MIT License:
 //
-// Copyright (C) 2017 Fanout, Inc.
+// Copyright (C) 2022 Fanout, Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -20,6 +20,19 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
+export interface ReconnectingEventSourceInit extends EventSourceInit {
+    // the maximum time to wait before attempting to reconnect in ms, default `3000`
+    // note: wait time is randomised to prevent all clients from attempting to reconnect simultaneously
+    max_retry_time?: number;
+
+    // the EventSource class to wrap. This allows the use of a polyfill or alternate
+    // implementation instead of the platform-provided EventSource class.
+    eventSourceClass?: typeof EventSource;
+
+    // the last event
+    lastEventId?: string;
+}
+
 export class EventSourceNotAvailableError extends Error {
     constructor() {
         super(
@@ -30,18 +43,45 @@ export class EventSourceNotAvailableError extends Error {
     }
 }
 
-export default class ReconnectingEventSource {
+type Listeners = {
+  [K in keyof EventSourceEventMap]: ((this: EventSource, ev: EventSourceEventMap[K]) => any)[];
+};
 
-    constructor(url, configuration) {
-        this._configuration = configuration != null ? Object.assign({}, configuration) : null;
+export default class ReconnectingEventSource implements EventSource {
+
+    readonly _configuration: ReconnectingEventSourceInit | undefined;
+    readonly CONNECTING = 0;
+    readonly OPEN = 1;
+    readonly CLOSED = 2;
+
+    _eventSource: EventSource | null;
+    _lastEventId: string | null;
+    _timer: NodeJS.Timer | null;
+    _listeners: Listeners;
+    _onevent_wrapped: (this: EventSource, ev: Event) => any;
+
+    readyState: 0 | 1 | 2;
+    url: string;
+    withCredentials: boolean;
+
+    readonly max_retry_time: number;
+    eventSourceClass: typeof EventSource;
+
+    constructor(url: string | URL, configuration?: ReconnectingEventSourceInit) {
+        this._configuration = configuration != null ? Object.assign({}, configuration) : undefined;
+        this.withCredentials = false;
 
         this._eventSource = null;
         this._lastEventId = null;
         this._timer = null;
-        this._listeners = {};
+        this._listeners = {
+            open: [],
+            error: [],
+            message: [],
+        };
 
-        this.url = url;
-        this.readyState = 0;
+        this.url = url.toString();
+        this.readyState = this.CONNECTING;
         this.max_retry_time = 3000;
         this.eventSourceClass = globalThis.EventSource;
 
@@ -66,9 +106,13 @@ export default class ReconnectingEventSource {
             throw new EventSourceNotAvailableError();
         }
 
-        this._onevent_wrapped = event => { this._onevent(event); };
+        this._onevent_wrapped = (event) => { this._onevent(event); };
 
         this._start();
+    }
+
+    dispatchEvent(event: Event): boolean {
+        throw new Error("Method not implemented.");
     }
 
     _start() {
@@ -85,9 +129,9 @@ export default class ReconnectingEventSource {
 
         this._eventSource = new this.eventSourceClass(url, this._configuration);
 
-        this._eventSource.onopen = event => { this._onopen(event); };
-        this._eventSource.onerror = event => { this._onerror(event); };
-        this._eventSource.onmessage = event => { this.onmessage(event); };
+        this._eventSource.onopen = (event) => { this._onopen(event); };
+        this._eventSource.onerror = (event) => { this._onerror(event); };
+        this._eventSource.onmessage = (event) => { this.onmessage(event); };
 
         // apply listen types
         for (const type of Object.keys(this._listeners)) {
@@ -95,14 +139,14 @@ export default class ReconnectingEventSource {
         }
     }
 
-    _onopen(event) {
+    _onopen(event: Event) {
         if (this.readyState === 0) {
             this.readyState = 1;
             this.onopen(event);
         }
     }
 
-    _onerror(event) {
+    _onerror(event: Event) {
         if (this.readyState === 1) {
             this.readyState = 0;
             this.onerror(event);
@@ -121,33 +165,33 @@ export default class ReconnectingEventSource {
         }
     }
 
-    _onevent(event) {
-        if (event.lastEventId) {
+    _onevent(event: Event) {
+        if (event instanceof MessageEvent) {
             this._lastEventId = event.lastEventId;
         }
 
-        const listenersForType = this._listeners[event.type];
+        const listenersForType = this._listeners[event.type as keyof typeof this._listeners] as ((this:EventSource, ev: Event) => any)[];
         if (listenersForType != null) {
             // operate on a copy
             for (const listener of [...listenersForType]) {
-                listener(event);
+                listener.call(this, event);
             }
         }
 
         if (event.type === 'message') {
-            this.onmessage(event);
+            this.onmessage(event as MessageEvent);
         }
     }
 
-    onopen(event) {
+    onopen(event: Event) {
         // may be overridden
     }
 
-    onerror(event) {
+    onerror(event: Event) {
         // may be overridden
     }
 
-    onmessage(event) {
+    onmessage(event: MessageEvent) {
         // may be overridden
     }
 
@@ -165,39 +209,26 @@ export default class ReconnectingEventSource {
         this.readyState = 2;
     }
 
-    addEventListener(inType, callback) {
-        const type = inType.toString();
+    addEventListener<K extends keyof EventSourceEventMap>(type: K, callback: (this: EventSource, ev: EventSourceEventMap[K]) => any, options?: boolean | AddEventListenerOptions) {
+        // We don't support options at the moment
 
-        if (!(type in this._listeners)) {
+        if (this._listeners[type] == null) {
             this._listeners[type] = [];
-            if (this._eventSource) {
+            if (this._eventSource != null) {
                 this._eventSource.addEventListener(type, this._onevent_wrapped);
             }
         }
 
         const listenersForType = this._listeners[type];
         if (!listenersForType.includes(callback)) {
-            this._listeners[type] = [...listenersForType, callback];
+            this._listeners[type] = [...listenersForType, callback] as Listeners[typeof type];
         }
     }
 
-    removeEventListener(inType, callback) {
-        const type = inType.toString();
+    removeEventListener<K extends keyof EventSourceEventMap>(type: K, callback: (this: EventSource, ev: EventSourceEventMap[K]) => any, options?: boolean | AddEventListenerOptions) {
+        // We don't support options at the moment
 
-        if (type in this._listeners) {
-
-            const listenersForType = this._listeners[type];
-
-            const updatedListenersForType = listenersForType.filter(l => l !== callback);
-
-            if (updatedListenersForType.length > 0) {
-                this._listeners[type] = updatedListenersForType;
-            } else {
-                delete this._listeners[type];
-                if (this._eventSource) {
-                    this._eventSource.removeEventListener(type, this._onevent_wrapped);
-                }
-            }
-        }
+        const listenersForType = this._listeners[type];
+        this._listeners[type] = listenersForType.filter(l => l !== callback) as Listeners[typeof type];
     }
 }

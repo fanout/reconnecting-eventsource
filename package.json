@@ -2,17 +2,18 @@
   "name": "reconnecting-eventsource",
   "version": "1.4.0",
   "description": "wrapper library around the JavaScript EventSource API to ensure it maintains a connection to the server.",
-  "main": "lib/index.js",
-  "typings": "reconnecting-eventsource.d.ts",
+  "main": "build/src/reconnecting-eventsource.js",
+  "module": "build/esm/reconnecting-eventsource.js",
+  "esnext": "build/esnext/reconnecting-eventsource.js",
+  "types": "build/src/reconnecting-eventsource.d.ts",
   "scripts": {
-    "clean": "rimraf lib dist",
-    "build": "npm run build:commonjs && npm run build:umd && npm run build:umd:min",
-    "build:commonjs": "cross-env BUILD_TARGET=commonjs webpack",
-    "build:umd": "cross-env BUILD_TARGET=umd webpack",
-    "build:umd:min": "cross-env BUILD_TARGET=umd-min webpack",
-    "check:src": "npm run lint",
-    "lint": "eslint src",
-    "prepublishOnly": "npm run clean && npm run check:src && npm run build",
+    "clean": "rimraf build",
+    "build": "npm run build:commonjs && npm run build:esm && npm run build:esnext",
+    "build:commonjs": "tsc --project tsconfig.json",
+    "build:esm": "tsc --project tsconfig.esm.json",
+    "build:esnext": "tsc --project tsconfig.esnext.json",
+    "lint": "eslint src --ext .ts",
+    "prepublishOnly": "npm run clean && npm run lint && npm run build",
     "test": "npm run build && node test"
   },
   "repository": {
@@ -39,22 +40,29 @@
   },
   "homepage": "https://github.com/fanout/reconnecting-eventsource#readme",
   "devDependencies": {
-    "babel": "^6.23.0",
-    "babel-core": "^6.26.3",
-    "babel-eslint": "^7.2.3",
-    "babel-loader": "^7.1.1",
-    "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
-    "babel-preset-env": "^1.7.0",
-    "cross-env": "^5.0.1",
-    "eslint": "^6.6.0",
-    "eventsource": "^1.0.7",
+    "@typescript-eslint/eslint-plugin": "^5.30.5",
+    "@typescript-eslint/parser": "^5.30.5",
+    "eslint": "^8.19.0",
+    "eventsource": "^2.0.2",
     "rimraf": "^2.6.1",
     "sse": "0.0.8",
     "stoppable": "^1.1.0",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10"
+    "typescript": "^4.7.4"
   },
-  "engines" : {
-    "node" : ">=12.0.0"
-  }
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "files": [
+    "build/esm/**/*.js",
+    "build/esm/**/*.js.map",
+    "build/esm/**/*.d.ts",
+    "build/esnext/**/*.js",
+    "build/esnext/**/*.js.map",
+    "build/esnext/**/*.d.ts",
+    "build/src/**/*.js",
+    "build/src/**/*.js.map",
+    "build/src/**/*.d.ts",
+    "COPYING",
+    "README.md"
+  ]
 }
