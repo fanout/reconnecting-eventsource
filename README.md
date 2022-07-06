@@ -23,7 +23,7 @@ npm install reconnecting-eventsource
 In a browser environment, bring this in using:
 
 ```html
-<script src="/node_modules/reconnecting-eventsource/dist/ReconnectingEventSource[.min].js"></script>
+<script src="/node_modules/reconnecting-eventsource/dist/ReconnectingEventSource.min.js"></script>
 ```
 
 (You are free to copy this file out of `node_modules` if you wish)
@@ -52,7 +52,6 @@ Like the [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventS
     // underlying EventSource class, default `EventSource`
     eventSourceClass: EventSource,
 }
-
 ```
 
 ## Building from source
