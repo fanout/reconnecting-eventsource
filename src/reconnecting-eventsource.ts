@@ -44,7 +44,7 @@ export class EventSourceNotAvailableError extends Error {
 }
 
 type Listeners = {
-  [K in keyof EventSourceEventMap]: ((this: EventSource, ev: EventSourceEventMap[K]) => any)[];
+  [K in keyof EventSourceEventMap]?: ((this: EventSource, ev: EventSourceEventMap[K]) => any)[];
 };
 
 export default class ReconnectingEventSource implements EventSource {
@@ -74,11 +74,7 @@ export default class ReconnectingEventSource implements EventSource {
         this._eventSource = null;
         this._lastEventId = null;
         this._timer = null;
-        this._listeners = {
-            open: [],
-            error: [],
-            message: [],
-        };
+        this._listeners = {};
 
         this.url = url.toString();
         this.readyState = this.CONNECTING;
@@ -210,9 +206,10 @@ export default class ReconnectingEventSource implements EventSource {
     }
 
     addEventListener<K extends keyof EventSourceEventMap>(type: K, callback: (this: EventSource, ev: EventSourceEventMap[K]) => any, options?: boolean | AddEventListenerOptions) {
-        // We don't support options at the moment
 
-        if (this._listeners[type] == null) {
+        // We don't support the options arg at the moment
+
+        if (!(type in this._listeners)) {
             this._listeners[type] = [];
             if (this._eventSource != null) {
                 this._eventSource.addEventListener(type, this._onevent_wrapped);
@@ -220,15 +217,27 @@ export default class ReconnectingEventSource implements EventSource {
         }
 
         const listenersForType = this._listeners[type];
-        if (!listenersForType.includes(callback)) {
-            this._listeners[type] = [...listenersForType, callback] as Listeners[typeof type];
+        if (Array.isArray(listenersForType) && !listenersForType.includes(callback)) {
+            this._listeners[type] = [...listenersForType, callback];
         }
     }
 
     removeEventListener<K extends keyof EventSourceEventMap>(type: K, callback: (this: EventSource, ev: EventSourceEventMap[K]) => any, options?: boolean | AddEventListenerOptions) {
-        // We don't support options at the moment
+
+        // We don't support the options arg at the moment
 
         const listenersForType = this._listeners[type];
-        this._listeners[type] = listenersForType.filter(l => l !== callback) as Listeners[typeof type];
+        if (listenersForType != null) {
+            const updatedListenersForType = listenersForType.filter(l => l !== callback) as Listeners[typeof type];
+
+            if (Array.isArray(updatedListenersForType) && updatedListenersForType.length > 0) {
+                this._listeners[type] = updatedListenersForType;
+            } else {
+                delete this._listeners[type];
+                if (this._eventSource != null) {
+                    this._eventSource.removeEventListener(type, this._onevent_wrapped);
+                }
+            }
+        }
     }
 }
