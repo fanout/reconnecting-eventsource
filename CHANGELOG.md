@@ -16,5 +16,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved build process using just TypeScript, rather than using webpack/babel 
 
 [Unreleased]: https://github.com/fanout/reconnecting-eventsource/compare/v1.5.1...HEAD
-[1.5.1]: https://github.com/fanout/reconnecting-eventsource/compare/v1.5.1...v1.5.0
-[1.5.0]: https://github.com/fanout/reconnecting-eventsource/tag/v1.5.0
+[1.5.1]: https://github.com/fanout/reconnecting-eventsource/compare/v1.5.0...v1.5.1
+[1.5.0]: https://github.com/fanout/reconnecting-eventsource/releases/tag/v1.5.0
