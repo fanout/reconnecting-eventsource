@@ -43,8 +43,11 @@ export class EventSourceNotAvailableError extends Error {
     }
 }
 
+type EventType<T extends string> = T extends keyof EventSourceEventMap ? EventSourceEventMap[T] : MessageEvent<any>;
+type EventListenerType<T extends string> = (this: EventSource, event: EventType<T>) => any;
+
 type Listeners = {
-  [K in keyof EventSourceEventMap]?: ((this: EventSource, ev: EventSourceEventMap[K]) => any)[];
+  [name: string]: ((this: EventSource, event: Event) => any)[];
 };
 
 export default class ReconnectingEventSource implements EventSource {
@@ -166,7 +169,7 @@ export default class ReconnectingEventSource implements EventSource {
             this._lastEventId = event.lastEventId;
         }
 
-        const listenersForType = this._listeners[event.type as keyof typeof this._listeners] as ((this:EventSource, ev: Event) => any)[];
+        const listenersForType = this._listeners[event.type];
         if (listenersForType != null) {
             // operate on a copy
             for (const listener of [...listenersForType]) {
@@ -205,8 +208,9 @@ export default class ReconnectingEventSource implements EventSource {
         this.readyState = 2;
     }
 
-    addEventListener<K extends keyof EventSourceEventMap>(type: K, callback: (this: EventSource, ev: EventSourceEventMap[K]) => any, options?: boolean | AddEventListenerOptions) {
-
+    addEventListener<K extends keyof EventSourceEventMap>(type: K, listener: (this: EventSource, ev: EventSourceEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(type: string, listener: (this: EventSource, event: MessageEvent<any>) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener<K extends string>(type: K, listener: EventListenerType<K>, options?: boolean | AddEventListenerOptions): void {
         // We don't support the options arg at the moment
 
         if (!(type in this._listeners)) {
@@ -216,23 +220,29 @@ export default class ReconnectingEventSource implements EventSource {
             }
         }
 
-        const listenersForType = this._listeners[type];
-        if (Array.isArray(listenersForType) && !listenersForType.includes(callback)) {
-            this._listeners[type] = [...listenersForType, callback];
+        const listenersForType = this._listeners[type] as EventListenerType<K>[];
+        if (Array.isArray(listenersForType) && !listenersForType.includes(listener)) {
+            listenersForType.push(listener);
         }
     }
 
-    removeEventListener<K extends keyof EventSourceEventMap>(type: K, callback: (this: EventSource, ev: EventSourceEventMap[K]) => any, options?: boolean | AddEventListenerOptions) {
-
+    removeEventListener<K extends keyof EventSourceEventMap>(type: K, listener: (this: EventSource, ev: EventSourceEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(type: string, listener: (this: EventSource, event: MessageEvent<any>) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener<K extends string>(type: K, listener: EventListenerType<K>, options?: boolean | EventListenerOptions): void {
         // We don't support the options arg at the moment
 
-        const listenersForType = this._listeners[type];
+        const listenersForType = this._listeners[type] as EventListenerType<K>[];
         if (listenersForType != null) {
-            const updatedListenersForType = listenersForType.filter(l => l !== callback) as Listeners[typeof type];
+            // eslint-disable-next-line no-constant-condition
+            while(true) {
+                const index = listenersForType.indexOf(listener);
+                if (index === -1) {
+                    break;
+                }
+                listenersForType.splice(index, 1);
+            }
 
-            if (Array.isArray(updatedListenersForType) && updatedListenersForType.length > 0) {
-                this._listeners[type] = updatedListenersForType;
-            } else {
+            if (listenersForType.length <= 0) {
                 delete this._listeners[type];
                 if (this._eventSource != null) {
                     this._eventSource.removeEventListener(type, this._onevent_wrapped);
