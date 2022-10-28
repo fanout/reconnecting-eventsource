@@ -1,6 +1,6 @@
 {
   "name": "reconnecting-eventsource",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "wrapper library around the JavaScript EventSource API to ensure it maintains a connection to the server.",
   "main": "./build/src/reconnecting-eventsource.js",
   "exports": {
