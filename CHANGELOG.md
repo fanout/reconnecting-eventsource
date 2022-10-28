@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2022-10-28
+### Fixed
+- Loading this package as an ESM module
+
 ## [1.5.2] - 2022-08-13
 ### Fixed
 - Event names can be any freely chosen name
