@@ -57,6 +57,11 @@ export default class ReconnectingEventSource implements EventSource {
     readonly OPEN = 1;
     readonly CLOSED = 2;
 
+    // Evidently these are to exist both on the class and the instance
+    static readonly CONNECTING = 0;
+    static readonly OPEN = 1;
+    static readonly CLOSED = 2;
+
     _eventSource: EventSource | null;
     _lastEventId: string | null;
     _timer: NodeJS.Timer | null;
