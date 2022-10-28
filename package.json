@@ -3,6 +3,13 @@
   "version": "1.5.2",
   "description": "wrapper library around the JavaScript EventSource API to ensure it maintains a connection to the server.",
   "main": "./build/src/reconnecting-eventsource.js",
+  "exports": {
+    ".": {
+      "types": "./build/src/reconnecting-eventsource.d.ts",
+      "import": "./build/esm/reconnecting-eventsource.js",
+      "require": "./build/src/reconnecting-eventsource.js"
+    }
+  },
   "module": "./build/esm/reconnecting-eventsource.js",
   "esnext": "./build/esnext/reconnecting-eventsource.js",
   "types": "./build/src/reconnecting-eventsource.d.ts",
@@ -10,7 +17,7 @@
     "clean": "rimraf build browser",
     "build": "npm run build:commonjs && npm run build:esm && npm run build:esnext && npm run build:browser",
     "build:commonjs": "tsc --project tsconfig.json",
-    "build:esm": "tsc --project tsconfig.esm.json",
+    "build:esm": "tsc --project tsconfig.esm.json && cp resources/esm_package.json build/esm/package.json",
     "build:esnext": "tsc --project tsconfig.esnext.json",
     "build:browser": "webpack",
     "lint": "eslint src --ext .ts",
