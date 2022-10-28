@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.2] - 2022-10-28
+### Fixed
+- Added missing constants OPEN, CONNECTING, CLOSED to ReconnectingEventSource class.
+
 ## [1.6.1] - 2022-10-28
 ### Fixed
 - Added missing file in package
