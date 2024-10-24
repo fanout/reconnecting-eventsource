@@ -75,3 +75,18 @@ Some errors, such as 502, are probably temporary, and ideally wouldn't cause cli
 ## So this thing reconnects forever. How do I make it stop?
 
 The client has to explicitly stop by calling `es.close()`. If you want to control this from the server, have the server send some kind of close instruction for the client to act on.
+
+## Compatibility
+
+Browsers
+* Chrome / Chrome Android 71 and newer
+* Edge 79 and newer
+* Safari 12.2 and newer
+* Firefox / Firefox Android 65 and newer
+* Firefox Android 65 or newer
+* Opera 58 and newer
+* Opera Android 50 and newer
+
+Server
+* Node.js 12.0 and newer
+* Deno 1.38 and newer

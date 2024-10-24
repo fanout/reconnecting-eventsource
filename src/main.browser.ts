@@ -1,5 +1,5 @@
 import ReconnectingEventSource, { EventSourceNotAvailableError } from './reconnecting-eventsource';
-Object.assign(window, {
+Object.assign(globalThis, {
   ReconnectingEventSource,
   EventSourceNotAvailableError,
 });
