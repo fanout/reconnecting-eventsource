@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.3] - 2022-11-06
+### Fixed
+- Use globalThis instead of window
+- Clarify compatibility
+
 ## [1.6.2] - 2022-10-28
 ### Fixed
 - Added missing constants OPEN, CONNECTING, CLOSED to ReconnectingEventSource class.
@@ -31,6 +36,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reformatted in TypeScript for better type checking
 - Improved build process using just TypeScript, rather than using webpack/babel 
 
-[Unreleased]: https://github.com/fanout/reconnecting-eventsource/compare/v1.5.1...HEAD
+[Unreleased]: https://github.com/fanout/reconnecting-eventsource/compare/v1.6.3...HEAD
+[1.6.3]: https://github.com/fanout/reconnecting-eventsource/compare/v1.6.2...v1.6.3
+[1.6.2]: https://github.com/fanout/reconnecting-eventsource/compare/v1.6.1...v1.6.2
+[1.6.1]: https://github.com/fanout/reconnecting-eventsource/compare/v1.6.0...v1.6.1
+[1.6.0]: https://github.com/fanout/reconnecting-eventsource/compare/v1.5.2...v1.6.0
+[1.5.2]: https://github.com/fanout/reconnecting-eventsource/compare/v1.5.1...v1.5.2
 [1.5.1]: https://github.com/fanout/reconnecting-eventsource/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/fanout/reconnecting-eventsource/releases/tag/v1.5.0
