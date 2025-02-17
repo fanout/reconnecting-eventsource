@@ -1,0 +1,53 @@
+name: Release CI
+on:
+  push:
+    tags:
+      # This looks like a regex, but it's actually a filter pattern
+      # see https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
+      - 'v*.*.*'
+      - 'v*.*.*-*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v4
+
+      - name: Validate SemVer tag
+        run: |
+          TAG="${GITHUB_REF_NAME#refs/tags/}"
+          if [[ ! "$TAG" =~ ^v[0-9]+(\.[0-9]+){2}(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$ ]]; then
+            echo "::error::Invalid tag: $TAG. Must follow SemVer syntax (e.g., v1.2.3, v1.2.3-alpha)."
+            exit 1
+          fi
+        shell: bash
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Extract prerelease tag if present
+        id: extract-tag
+        run: |
+          TAG="${GITHUB_REF_NAME#v}" # Remove the "v" prefix
+          if [[ "$TAG" == *-* ]]; then
+            PRERELEASE=${TAG#*-} # Remove everything before the dash
+            PRERELEASE=${PRERELEASE%%.*} # Remove everything after the first period
+          else
+            PRERELEASE="latest"
+          fi
+          echo "DIST_TAG=$PRERELEASE" >> $GITHUB_ENV
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Publish to npmjs.org
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo "Publishing to npmjs.org using dist-tag: $DIST_TAG"
+          npm publish --access=public --tag "$DIST_TAG"
