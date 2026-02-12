@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Updated
+- Release to npmjs using updated CI workflow and trusted publishing
+
 ## [1.6.4] - 2025-02-17
 ### Added
 - Release to npmjs using CI workflow
